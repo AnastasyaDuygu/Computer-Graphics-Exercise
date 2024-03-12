@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -5,6 +6,8 @@ public class MeshGenerator : MonoBehaviour
 {
     MeshFilter _meshFilter;
     Renderer _renderer;
+
+    const int numOfVertices = 162;
 
     private void Awake()
     {
@@ -15,8 +18,61 @@ public class MeshGenerator : MonoBehaviour
             _meshFilter.mesh = GenerateCubeMesh();
         else if (name == "Pyramid")
             _meshFilter.mesh = GeneratePyramidMesh();
+        else if (name == "Plane Mesh")
+        {
+            _meshFilter .mesh = GeneratePlaneMesh();
+        }
     }
 
+    private Mesh GeneratePlaneMesh()
+    {
+        Mesh mesh = new Mesh();
+
+        int numOfSquares = (int)Math.Sqrt(numOfVertices / 2); //9
+        Debug.Log(numOfSquares);
+        var vertices = new Vector3[numOfSquares, numOfSquares];
+        var finalVertices = new Vector3[numOfVertices];
+        for (int z = 0; z < numOfSquares; z++) //column
+        {
+            for (int x = 0; x < numOfSquares; x+=3) //row
+            {
+                var vector3s = createTriangleVertices(new Vector3((float)x, 0, (float)z));
+                vertices[x, z] = vector3s[0];
+                vertices[x+1, z] = vector3s[1];
+                vertices[x+2, z] = vector3s[2];
+            }    
+        }
+
+        mesh.vertices = finalVertices;
+
+        var triangles = new int[numOfVertices];
+        for (int i = 0; i < triangles.Length; i++)
+        {
+            triangles[i] = i;
+        }
+        mesh.triangles = triangles;
+        return mesh;
+    }
+    private Vector3[] createTriangleVertices(Vector3 startIndex)
+    {
+        int[] indexModX = { 0, 1 };
+        int[] indexModZ = { 1, 1 };
+
+        Vector3[] vertices = new Vector3[3];
+        vertices[0] = startIndex;
+        for (int i = 0;i < indexModX.Length; i++)
+        {
+            var xafter = startIndex.x + indexModX[i];
+            var zafter = startIndex.z + indexModZ[i];
+            vertices[i + 1] = new Vector3(xafter, 0, zafter);
+        }
+        return vertices;
+    }
+    private Vector3 convertMatrixToArray(Vector3[][] matrixArray) //TODO: aaaaa
+    {
+        Vector3[] vertices = new Vector3[numOfVertices / 2];
+        return vertices;
+    }
     private Mesh GenerateCubeMesh()
     {
 
