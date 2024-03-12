@@ -9,7 +9,7 @@ public class MeshDeformer : MonoBehaviour
 
     Vector3[] vertexVelocities;
 
-    public float springForce = 20f;
+    //public float springForce = 20f;
 
     public float damping = 5f;
 
@@ -26,13 +26,34 @@ public class MeshDeformer : MonoBehaviour
 
         vertexVelocities = new Vector3[originalVertices.Length];
     }
-    public void AddDeformingForce(Vector3 point, float force)
+    public void TakeOutPieceOfMesh(Vector3 point, int triangleIndex)
+    {
+        Debug.DrawLine(Camera.main.transform.position, point);
+        point = transform.InverseTransformPoint(point); //for the point of impact to not be affected by change in tranformation***
+        if (triangleIndex > displacedVertices.Length || triangleIndex < 0) return;
+        for(int i = triangleIndex-1; i <triangleIndex; i++)
+        {
+            TakeOutPieceFromVertex(i, point);
+        }
+                                           //Debug.Log(displacedVertices.Length);
+        
+    }
+
+    private void TakeOutPieceFromVertex(int i, Vector3 point)
+    {
+        Vector3 pointToVertex = displacedVertices[i] - point;
+        pointToVertex.y -= 100;
+        vertexVelocities[i] += pointToVertex.normalized;
+    }
+
+    public void AddDeformingForce(Vector3 point, float force) //NOT USED
     {
         Debug.DrawLine(Camera.main.transform.position, point); //for debug purposes
 
-        point = transform.InverseTransformPoint(point);
+        point = transform.InverseTransformPoint(point); //for the point of impact to not be affected by change in tranformation
         for (int i = 0; i < displacedVertices.Length; i++)
         {
+            
             AddForceToVertex(i, point, force);
         }
         
@@ -62,7 +83,7 @@ public class MeshDeformer : MonoBehaviour
         Vector3 velocity = vertexVelocities[i];
         Vector3 displacement = displacedVertices[i] - originalVertices[i];
         displacement *= uniformScale;
-        velocity -= displacement * springForce * Time.deltaTime;
+        //velocity -= displacement * springForce * Time.deltaTime;
         velocity *= 1f - damping * Time.deltaTime;
         vertexVelocities[i] = velocity;
         displacedVertices[i] += velocity * (Time.deltaTime / uniformScale);
