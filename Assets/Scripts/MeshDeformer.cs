@@ -1,6 +1,7 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 [RequireComponent(typeof(MeshFilter))]
 public class MeshDeformer : MonoBehaviour
@@ -15,6 +16,7 @@ public class MeshDeformer : MonoBehaviour
     public float damping = 5f;
 
     float uniformScale = 1f;
+
     private void Start()
     {
         deformingMesh = GetComponent<MeshFilter>().mesh;
@@ -100,11 +102,8 @@ public class MeshDeformer : MonoBehaviour
         List<int> listOfIndexes = findAllIndexesOfItem(displacedVertices, modifiedVertex);
         foreach(int index in listOfIndexes)
         {
-            Vector3 changed = new Vector3(displacedVertices[index].x, displacedVertices[index].y - 5, displacedVertices[index].z);
-            displacedVertices[index] = Vector3.Lerp(displacedVertices[index], changed, 1f);
-            //displacedVertices[index].y = -5;
+            DOTween.To(() => displacedVertices[index], x => displacedVertices[index] = x, new Vector3(displacedVertices[index].x, displacedVertices[index].y - 5, displacedVertices[index].z), 1);
             Debug.Log("DISPLACED VERTICES: " + displacedVertices[index]);
-            Debug.Log(changed);
         }
     }
 
