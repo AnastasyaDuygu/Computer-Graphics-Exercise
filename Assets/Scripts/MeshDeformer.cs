@@ -25,16 +25,84 @@ public class MeshDeformer : MonoBehaviour
         }
 
         vertexVelocities = new Vector3[originalVertices.Length];
+
+        /*Debug.Log(originalVertices[0] + " " + originalVertices[1] + " " + originalVertices[2] + " " + originalVertices[3]);
+        Debug.Log("...");
+        Debug.Log(originalVertices[800] + " " + originalVertices[801] + " " + originalVertices[802] + " " + originalVertices[803]);*/
     }
 
     public void PushGroundUnder(Vector3 point, int triangleIndex)
     {
         Debug.DrawLine(Camera.main.transform.position, point);
+        point = transform.InverseTransformPoint(point); //for the point of impact to not be affected by change in tranformation***
+        
+        var t = checkTriangleIdex(triangleIndex); //Check index first
+        Debug.Log("TRIANGLE INDEX: "+ t);
+        var n = calculateN(t); //Calculate n
+        Debug.Log("N: " + n);
+        var squaresPerRow = FindAnyObjectByType<MeshGenerator>().GetSquaresPerRow();
+        Debug.Log("SQUARES PER ROW: " + squaresPerRow);
+        var rowNumber = calculateRowNumber(n, squaresPerRow); //calculate row number
+        Debug.Log("ROW NUMBER: " + rowNumber);
+        var startIndex = computeStartIndex(t, n , rowNumber, squaresPerRow); //find start index
+        Debug.Log("START INDEX: " +  startIndex);
+        Vector3[] modifiedVertices = calculateModifiedVertices(startIndex); //list of modified indexes
+        Debug.Log("MODIFIED VERTICES: " + modifiedVertices[0] + " " + modifiedVertices[1] + " " + modifiedVertices[2] + " " + modifiedVertices[3]);
+        foreach ( var i in modifiedVertices)
+        {
+            pushDownVertex(i);
+        }
     }
 
+    private int checkTriangleIdex(int triangleIndex)
+    {
+        if (triangleIndex % 2 == 0) return triangleIndex - 1; else return triangleIndex;
+    }
 
+    private int calculateN(int t)
+    {
+        return (t + 1) / 2;
+    }
 
+    private int calculateRowNumber(int n, int squaresPerRow)
+    {
+        return Mathf.FloorToInt((n-1) / squaresPerRow);
+    }
 
+    private Vector3 computeStartIndex(int t, int n, int rowNum, int squaresPerRow)
+    {
+        return new Vector3(t - n - (rowNum * squaresPerRow), 0, rowNum);
+    }
+
+    private Vector3[] calculateModifiedVertices(Vector3 startIndex)
+    {
+        int[] indexModX = { 0, 1, 1 };
+        int[] indexModZ = { 1, 0, 1 };
+
+        Vector3[] modifiedVertices = new Vector3[indexModX.Length + 1];
+        modifiedVertices[0] = startIndex;
+
+        for (int i = 0; i < indexModX.Length; i++) 
+        { 
+            var xafter = startIndex.x + indexModX[i];
+            var zafter = startIndex.z + indexModZ[i];
+
+            modifiedVertices[i + 1] = new Vector3(xafter, 0, zafter);
+            Debug.Log("MODIFIED VERTICE: " + modifiedVertices[i+1]);
+        }
+        
+        return modifiedVertices;
+    }
+
+    private void pushDownVertex(Vector3 modifiedVertex)
+    {
+        modifiedVertex.y -= 100;
+        int index = Array.IndexOf(displacedVertices, modifiedVertex);
+        Debug.Log(index);
+        //vertexVelocities[index] += modifiedVertex.normalized;
+    }
+
+    //---------------------------------------------------------------------------------------------------------------------------//
     public void TakeOutPieceOfMesh(Vector3 point, int triangleIndex)
     {
         Debug.DrawLine(Camera.main.transform.position, point);

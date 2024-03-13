@@ -230,6 +230,11 @@ public class MeshGenerator : MonoBehaviour
         
         return mesh;
     }
+
+    public int GetSquaresPerRow()
+    {
+        return squaresPerRow;
+    }
 }
 
 /*private Vector3[] generateCubeVertices(Vector3 startPos) // get starting position and generates sides
