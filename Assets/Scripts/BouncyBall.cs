@@ -2,6 +2,13 @@ using UnityEngine;
 
 public class BouncyBall : MonoBehaviour
 {
+    [SerializeField] Vector3 startForce;
+
+    private void Start()
+    {
+        Rigidbody rb = GetComponent<Rigidbody>();
+        rb.AddForce(startForce, ForceMode.Impulse);
+    }
     /*public float forceOffset = 0.1f;
 
     
