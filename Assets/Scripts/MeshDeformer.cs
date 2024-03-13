@@ -1,14 +1,20 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using System;
 
 [RequireComponent(typeof(MeshFilter))]
 public class MeshDeformer : MonoBehaviour
 {
     Mesh deformingMesh;
     Vector3[] originalVertices, displacedVertices;
+
+    public delegate void OnMeshChanged();
+    public OnMeshChanged onMeshChangedCallback;
+    //subscribing method to the event, now UpdateUI will be called when event is triggered
     private void Start()
     {
+        onMeshChangedCallback += UpdateRigidbodyMesh;
         deformingMesh = GetComponent<MeshFilter>().mesh;
         originalVertices = deformingMesh.vertices;
         displacedVertices = new Vector3[originalVertices.Length];
@@ -17,10 +23,18 @@ public class MeshDeformer : MonoBehaviour
             displacedVertices[i] = originalVertices[i];
         }
     }
+
+    private void UpdateRigidbodyMesh()
+    {
+        Debug.Log("MESH CHANGED");
+    }
+
     void Update()
     {
         deformingMesh.vertices = displacedVertices;
         deformingMesh.RecalculateNormals();
+
+        //TODO: update rigidbody mesh when vertices are modified
     }
 
     public void PushGroundUnder(Vector3 point, int triangleIndex)
@@ -94,6 +108,8 @@ public class MeshDeformer : MonoBehaviour
             DOTween.To(() => displacedVertices[index], x => displacedVertices[index] = x, new Vector3(displacedVertices[index].x, displacedVertices[index].y - 5, displacedVertices[index].z), 1);
             Debug.Log("DISPLACED VERTICES: " + displacedVertices[index]);
         }
+        if (onMeshChangedCallback != null)
+            onMeshChangedCallback.Invoke();
     }
 
     private List<int> findAllIndexesOfItem(Vector3[] vertices, Vector3 item)
