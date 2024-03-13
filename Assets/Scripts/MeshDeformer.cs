@@ -100,8 +100,11 @@ public class MeshDeformer : MonoBehaviour
         List<int> listOfIndexes = findAllIndexesOfItem(displacedVertices, modifiedVertex);
         foreach(int index in listOfIndexes)
         {
-            displacedVertices[index].y = -50;
+            Vector3 changed = new Vector3(displacedVertices[index].x, displacedVertices[index].y - 5, displacedVertices[index].z);
+            displacedVertices[index] = Vector3.Lerp(displacedVertices[index], changed, 1f);
+            //displacedVertices[index].y = -5;
             Debug.Log("DISPLACED VERTICES: " + displacedVertices[index]);
+            Debug.Log(changed);
         }
     }
 
