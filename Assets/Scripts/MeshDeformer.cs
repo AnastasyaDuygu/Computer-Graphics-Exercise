@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
-using System;
 
 [RequireComponent(typeof(MeshFilter))]
 public class MeshDeformer : MonoBehaviour
@@ -11,7 +10,6 @@ public class MeshDeformer : MonoBehaviour
 
     public delegate void OnMeshChanged();
     public OnMeshChanged onMeshChangedCallback;
-    //subscribing method to the event, now UpdateUI will be called when event is triggered
     private void Start()
     {
         
@@ -27,8 +25,6 @@ public class MeshDeformer : MonoBehaviour
     {
         deformingMesh.vertices = displacedVertices;
         deformingMesh.RecalculateNormals();
-
-        //TODO: update rigidbody mesh when vertices are modified
     }
 
     public void PushGroundUnder(Vector3 point, int triangleIndex)
@@ -47,7 +43,7 @@ public class MeshDeformer : MonoBehaviour
         var startIndex = computeStartIndex(t, n, rowNumber, squaresPerRow); //find start index
         Debug.Log("START INDEX: " + startIndex);
         Vector3[] modifiedVertices = calculateModifiedVertices(startIndex); //list of modified indexes
-        //Debug.Log("MODIFIED VERTICES: " + modifiedVertices[0] + " " + modifiedVertices[1] + " " + modifiedVertices[2] + " " + modifiedVertices[3]);
+        Debug.Log("MODIFIED VERTICES: " + modifiedVertices[0] + " " + modifiedVertices[1] + " " + modifiedVertices[2] + " " + modifiedVertices[3]);
         foreach (var i in modifiedVertices)
         {
             pushDownVertex(i);
