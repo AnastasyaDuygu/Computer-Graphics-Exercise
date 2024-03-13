@@ -28,10 +28,6 @@ public class MeshDeformer : MonoBehaviour
         }
 
         vertexVelocities = new Vector3[originalVertices.Length];
-
-        /*Debug.Log(originalVertices[0] + " " + originalVertices[1] + " " + originalVertices[2] + " " + originalVertices[3]);
-        Debug.Log("...");
-        Debug.Log(originalVertices[800] + " " + originalVertices[801] + " " + originalVertices[802] + " " + originalVertices[803]);*/
     }
 
     public void PushGroundUnder(Vector3 point, int triangleIndex)
