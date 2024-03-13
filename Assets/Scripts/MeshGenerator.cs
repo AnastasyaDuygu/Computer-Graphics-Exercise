@@ -6,8 +6,9 @@ public class MeshGenerator : MonoBehaviour
     MeshFilter _meshFilter;
     Renderer _renderer;
 
-    const int numOfVertices = 486; //for 81 squares
-    int numOfSquares = (int)Math.Sqrt(numOfVertices / 6); //9 squares per row/column
+    const int squaresPerRow = 12;
+    const int numOfVertices = squaresPerRow * squaresPerRow * 6;
+    int numOfSquares = (int)Math.Sqrt(numOfVertices / 6);
 
     private void Awake()
     {
@@ -19,9 +20,7 @@ public class MeshGenerator : MonoBehaviour
         else if (name == "Pyramid")
             _meshFilter.mesh = GeneratePyramidMesh();
         else if (name == "Plane Mesh")
-        {
             _meshFilter .mesh = GeneratePlaneMesh();
-        }
     }
 
     private Mesh GeneratePlaneMesh()
