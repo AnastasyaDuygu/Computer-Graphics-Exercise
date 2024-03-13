@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
@@ -8,15 +7,6 @@ public class MeshDeformer : MonoBehaviour
 {
     Mesh deformingMesh;
     Vector3[] originalVertices, displacedVertices;
-
-    Vector3[] vertexVelocities;
-
-    //public float springForce = 20f;
-
-    public float damping = 5f;
-
-    float uniformScale = 1f;
-
     private void Start()
     {
         deformingMesh = GetComponent<MeshFilter>().mesh;
@@ -26,8 +16,11 @@ public class MeshDeformer : MonoBehaviour
         {
             displacedVertices[i] = originalVertices[i];
         }
-
-        vertexVelocities = new Vector3[originalVertices.Length];
+    }
+    void Update()
+    {
+        deformingMesh.vertices = displacedVertices;
+        deformingMesh.RecalculateNormals();
     }
 
     public void PushGroundUnder(Vector3 point, int triangleIndex)
@@ -116,7 +109,24 @@ public class MeshDeformer : MonoBehaviour
         return indexList;
     }
 
+
+
+
     //---------------------------------------------------------------------------------------------------------------------------//
+    //Vector3[] vertexVelocities;
+
+    //public float springForce = 20f;
+
+    //public float damping = 5f;
+
+    //float uniformScale = 1f;
+    /*
+     update -> //uniformScale = transform.localScale.x;
+        for (int i = 0; i < displacedVertices.Length; i++)
+        {
+            UpdateVertex(i);
+        }
+    start -> //vertexVelocities = new Vector3[originalVertices.Length];
     public void TakeOutPieceOfMesh(Vector3 point, int triangleIndex)
     {
         Debug.DrawLine(Camera.main.transform.position, point);
@@ -158,26 +168,16 @@ public class MeshDeformer : MonoBehaviour
         float velocity = attenuatedForce * Time.deltaTime;
         vertexVelocities[i] += pointToVertex.normalized * velocity;
     }
-    void Update()
-    {
-        uniformScale = transform.localScale.x;
-        for (int i = 0; i < displacedVertices.Length; i++)
-        {
-            UpdateVertex(i);
-        }
-        deformingMesh.vertices = displacedVertices;
-        deformingMesh.RecalculateNormals();
-    }
 
     void UpdateVertex(int i)
     {
         Vector3 velocity = vertexVelocities[i];
         Vector3 displacement = displacedVertices[i] - originalVertices[i];
-        displacement *= uniformScale;
+        //displacement *= uniformScale;
         //velocity -= displacement * springForce * Time.deltaTime;
         velocity *= 1f - damping * Time.deltaTime;
         vertexVelocities[i] = velocity;
         displacedVertices[i] += velocity * (Time.deltaTime / uniformScale);
-    }
+    }*/
 
 }
