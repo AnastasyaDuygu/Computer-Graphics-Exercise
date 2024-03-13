@@ -26,6 +26,15 @@ public class MeshDeformer : MonoBehaviour
 
         vertexVelocities = new Vector3[originalVertices.Length];
     }
+
+    public void PushGroundUnder(Vector3 point, int triangleIndex)
+    {
+        Debug.DrawLine(Camera.main.transform.position, point);
+    }
+
+
+
+
     public void TakeOutPieceOfMesh(Vector3 point, int triangleIndex)
     {
         Debug.DrawLine(Camera.main.transform.position, point);

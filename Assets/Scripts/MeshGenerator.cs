@@ -5,6 +5,7 @@ public class MeshGenerator : MonoBehaviour
 {
     MeshFilter _meshFilter;
     Renderer _renderer;
+    MeshCollider _meshCollider;
 
     const int squaresPerRow = 12;
     const int numOfVertices = squaresPerRow * squaresPerRow * 6;
@@ -14,13 +15,17 @@ public class MeshGenerator : MonoBehaviour
     {
         _renderer = GetComponent<Renderer>();
         _meshFilter = GetComponent<MeshFilter>();
-        
+        _meshCollider = GetComponent<MeshCollider>();
+
         if (name == "Cube")
             _meshFilter.mesh = GenerateCubeMesh();
         else if (name == "Pyramid")
             _meshFilter.mesh = GeneratePyramidMesh();
         else if (name == "Plane Mesh")
-            _meshFilter .mesh = GeneratePlaneMesh();
+        {
+            _meshFilter.mesh = GeneratePlaneMesh();
+            _meshCollider.sharedMesh = _meshFilter.mesh;
+        }
     }
 
     private Mesh GeneratePlaneMesh()

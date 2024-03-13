@@ -27,7 +27,7 @@ public class MeshDeformerInput : MonoBehaviour
                 Vector3 point = hit.point;
                 int triangleIndex = hit.triangleIndex;
                 point += hit.normal * forceOffset;
-                deformer.TakeOutPieceOfMesh(point, triangleIndex);
+                deformer.PushGroundUnder(point, triangleIndex);
                 //deformer.AddDeformingForce(point, force);
             }
         }
