@@ -14,7 +14,7 @@ public class MeshDeformer : MonoBehaviour
     //subscribing method to the event, now UpdateUI will be called when event is triggered
     private void Start()
     {
-        onMeshChangedCallback += UpdateRigidbodyMesh;
+        
         deformingMesh = GetComponent<MeshFilter>().mesh;
         originalVertices = deformingMesh.vertices;
         displacedVertices = new Vector3[originalVertices.Length];
@@ -23,12 +23,6 @@ public class MeshDeformer : MonoBehaviour
             displacedVertices[i] = originalVertices[i];
         }
     }
-
-    private void UpdateRigidbodyMesh()
-    {
-        Debug.Log("MESH CHANGED");
-    }
-
     void Update()
     {
         deformingMesh.vertices = displacedVertices;
@@ -53,7 +47,7 @@ public class MeshDeformer : MonoBehaviour
         var startIndex = computeStartIndex(t, n, rowNumber, squaresPerRow); //find start index
         Debug.Log("START INDEX: " + startIndex);
         Vector3[] modifiedVertices = calculateModifiedVertices(startIndex); //list of modified indexes
-        Debug.Log("MODIFIED VERTICES: " + modifiedVertices[0] + " " + modifiedVertices[1] + " " + modifiedVertices[2] + " " + modifiedVertices[3]);
+        //Debug.Log("MODIFIED VERTICES: " + modifiedVertices[0] + " " + modifiedVertices[1] + " " + modifiedVertices[2] + " " + modifiedVertices[3]);
         foreach (var i in modifiedVertices)
         {
             pushDownVertex(i);
@@ -94,7 +88,7 @@ public class MeshDeformer : MonoBehaviour
             var zafter = startIndex.z + indexModZ[i];
 
             modifiedVertices[i + 1] = new Vector3(xafter, 0, zafter);
-            Debug.Log("MODIFIED VERTICE: " + modifiedVertices[i + 1]);
+            //Debug.Log("MODIFIED VERTICE: " + modifiedVertices[i + 1]);
         }
 
         return modifiedVertices;
@@ -106,7 +100,7 @@ public class MeshDeformer : MonoBehaviour
         foreach(int index in listOfIndexes)
         {
             DOTween.To(() => displacedVertices[index], x => displacedVertices[index] = x, new Vector3(displacedVertices[index].x, displacedVertices[index].y - 5, displacedVertices[index].z), 1);
-            Debug.Log("DISPLACED VERTICES: " + displacedVertices[index]);
+            //Debug.Log("DISPLACED VERTICES: " + displacedVertices[index]);
         }
         if (onMeshChangedCallback != null)
             onMeshChangedCallback.Invoke();

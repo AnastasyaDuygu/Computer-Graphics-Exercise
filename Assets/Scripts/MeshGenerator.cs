@@ -7,6 +7,8 @@ public class MeshGenerator : MonoBehaviour
     Renderer _renderer;
     MeshCollider _meshCollider;
 
+    MeshDeformer _meshDeformer;
+
     const int squaresPerRow = 12;
     const int numOfVertices = squaresPerRow * squaresPerRow * 6;
     int numOfSquares = (int)Math.Sqrt(numOfVertices / 6);
@@ -16,6 +18,7 @@ public class MeshGenerator : MonoBehaviour
         _renderer = GetComponent<Renderer>();
         _meshFilter = GetComponent<MeshFilter>();
         _meshCollider = GetComponent<MeshCollider>();
+        _meshDeformer = GetComponent<MeshDeformer>();
 
         if (name == "Cube")
             _meshFilter.mesh = GenerateCubeMesh();
@@ -27,7 +30,15 @@ public class MeshGenerator : MonoBehaviour
             _meshCollider.sharedMesh = _meshFilter.mesh;
         }
     }
-
+    private void Start()
+    {
+        _meshDeformer.onMeshChangedCallback += UpdateRigidbodyMesh;
+    }
+    private void UpdateRigidbodyMesh()
+    {
+        //Debug.Log("MESH CHANGED");
+        _meshCollider.sharedMesh = _meshFilter.mesh;
+    }
     private Mesh GeneratePlaneMesh()
     {
         Mesh mesh = new Mesh();
