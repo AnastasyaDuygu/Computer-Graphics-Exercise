@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshFilter))]
@@ -35,20 +36,20 @@ public class MeshDeformer : MonoBehaviour
     {
         Debug.DrawLine(Camera.main.transform.position, point);
         point = transform.InverseTransformPoint(point); //for the point of impact to not be affected by change in tranformation***
-        
+
         var t = checkTriangleIdex(triangleIndex); //Check index first
-        Debug.Log("TRIANGLE INDEX: "+ t);
+        Debug.Log("TRIANGLE INDEX: " + t);
         var n = calculateN(t); //Calculate n
         Debug.Log("N: " + n);
         var squaresPerRow = FindAnyObjectByType<MeshGenerator>().GetSquaresPerRow();
         Debug.Log("SQUARES PER ROW: " + squaresPerRow);
         var rowNumber = calculateRowNumber(n, squaresPerRow); //calculate row number
         Debug.Log("ROW NUMBER: " + rowNumber);
-        var startIndex = computeStartIndex(t, n , rowNumber, squaresPerRow); //find start index
-        Debug.Log("START INDEX: " +  startIndex);
+        var startIndex = computeStartIndex(t, n, rowNumber, squaresPerRow); //find start index
+        Debug.Log("START INDEX: " + startIndex);
         Vector3[] modifiedVertices = calculateModifiedVertices(startIndex); //list of modified indexes
         Debug.Log("MODIFIED VERTICES: " + modifiedVertices[0] + " " + modifiedVertices[1] + " " + modifiedVertices[2] + " " + modifiedVertices[3]);
-        foreach ( var i in modifiedVertices)
+        foreach (var i in modifiedVertices)
         {
             pushDownVertex(i);
         }
@@ -66,7 +67,7 @@ public class MeshDeformer : MonoBehaviour
 
     private int calculateRowNumber(int n, int squaresPerRow)
     {
-        return Mathf.FloorToInt((n-1) / squaresPerRow);
+        return Mathf.FloorToInt((n - 1) / squaresPerRow);
     }
 
     private Vector3 computeStartIndex(int t, int n, int rowNum, int squaresPerRow)
@@ -82,24 +83,39 @@ public class MeshDeformer : MonoBehaviour
         Vector3[] modifiedVertices = new Vector3[indexModX.Length + 1];
         modifiedVertices[0] = startIndex;
 
-        for (int i = 0; i < indexModX.Length; i++) 
-        { 
+        for (int i = 0; i < indexModX.Length; i++)
+        {
             var xafter = startIndex.x + indexModX[i];
             var zafter = startIndex.z + indexModZ[i];
 
             modifiedVertices[i + 1] = new Vector3(xafter, 0, zafter);
-            Debug.Log("MODIFIED VERTICE: " + modifiedVertices[i+1]);
+            Debug.Log("MODIFIED VERTICE: " + modifiedVertices[i + 1]);
         }
-        
+
         return modifiedVertices;
     }
 
     private void pushDownVertex(Vector3 modifiedVertex)
     {
-        modifiedVertex.y -= 100;
-        int index = Array.IndexOf(displacedVertices, modifiedVertex);
-        Debug.Log(index);
-        //vertexVelocities[index] += modifiedVertex.normalized;
+        List<int> listOfIndexes = findAllIndexesOfItem(displacedVertices, modifiedVertex);
+        foreach(int index in listOfIndexes)
+        {
+            displacedVertices[index].y = -50;
+            Debug.Log("DISPLACED VERTICES: " + displacedVertices[index]);
+        }
+    }
+
+    private List<int> findAllIndexesOfItem(Vector3[] vertices, Vector3 item)
+    {
+        List<int> indexList = new List<int>();
+        for(int i = 0; i< vertices.Length; i++)
+        {
+            if (vertices[i] == item)
+            {
+                indexList.Add(i);
+            }
+        }
+        return indexList;
     }
 
     //---------------------------------------------------------------------------------------------------------------------------//
