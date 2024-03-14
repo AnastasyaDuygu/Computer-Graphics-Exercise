@@ -9,31 +9,34 @@ public class BouncyBall : MonoBehaviour
         Rigidbody rb = GetComponent<Rigidbody>();
         rb.AddForce(startForce, ForceMode.Impulse);
     }
-    /*public float forceOffset = 0.1f;
 
-    
-    void Update()
+    private void OnCollisionEnter(Collision other)
     {
-        if (Input.GetMouseButton(0))
+        if (other.collider.CompareTag("Ground"))
         {
-            HandleInput();
+            Debug.Log("Hit ground");
+            SendRayDownwards();
         }
     }
-    void HandleInput()
-    {
-        Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
 
-        if (Physics.Raycast(inputRay, out hit))
+    private void SendRayDownwards()
+    {
+        var dist = 5;
+        var dir = new Vector3(0, -1, 0); //direction downwards 
+
+        Debug.DrawRay(transform.position, dir * dist, Color.green);
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, dir, out hit, dist))
         {
             MeshDeformer deformer = hit.collider.GetComponent<MeshDeformer>();
             if (deformer)
             {
-                Vector3 point = hit.point;
+                //Vector3 point = hit.point;
                 int triangleIndex = hit.triangleIndex;
-                point += hit.normal * forceOffset;
-                deformer.TakeOutPieceOfMesh(point, triangleIndex);
+                deformer.PushGroundUnder(triangleIndex);
             }
         }
-    }*/
+
+    }
+
 }

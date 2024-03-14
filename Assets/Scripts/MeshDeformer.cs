@@ -27,11 +27,12 @@ public class MeshDeformer : MonoBehaviour
         deformingMesh.RecalculateNormals();
     }
 
-    public void PushGroundUnder(Vector3 point, int triangleIndex)
+    public void PushGroundUnder(int triangleIndex)
     {
-        Debug.DrawLine(Camera.main.transform.position, point);
-        point = transform.InverseTransformPoint(point); //for the point of impact to not be affected by change in tranformation***
-
+        //this code was used when input was taken from mouse click
+        //Debug.DrawLine(Camera.main.transform.position, point);
+        //point = transform.InverseTransformPoint(point); //for the point of impact to not be affected by change in tranformation***
+        
         var t = checkTriangleIdex(triangleIndex); //Check index first
         Debug.Log("TRIANGLE INDEX: " + t);
         var n = calculateN(t); //Calculate n
@@ -52,7 +53,7 @@ public class MeshDeformer : MonoBehaviour
 
     private int checkTriangleIdex(int triangleIndex)
     {
-        if (triangleIndex % 2 == 0) return triangleIndex - 1; else return triangleIndex;
+        if (triangleIndex % 2 == 0) return triangleIndex + 1; else return triangleIndex;
     }
 
     private int calculateN(int t)

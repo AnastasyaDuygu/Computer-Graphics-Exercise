@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class MeshDeformerInput : MonoBehaviour
 {
-
-    public float force = 10f;
-
+    
+    //public float force = 10f;
+    /*
     public float forceOffset = 0.1f; //guarantees vertices will be pushed inward and NOT outwards
 
     void Update()
@@ -30,5 +30,5 @@ public class MeshDeformerInput : MonoBehaviour
                 deformer.PushGroundUnder(point, triangleIndex);
             }
         }
-    }
+    }*/
 }
