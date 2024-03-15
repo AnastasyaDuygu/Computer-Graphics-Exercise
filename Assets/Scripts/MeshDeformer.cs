@@ -27,7 +27,7 @@ public class MeshDeformer : MonoBehaviour
         deformingMesh.RecalculateNormals();
     }
 
-    public void PushGroundUnder(int triangleIndex)
+    public void PushGroundUnder(Vector3 point, int triangleIndex)
     {
         //this code was used when input was taken from mouse click
         //Debug.DrawLine(Camera.main.transform.position, point);

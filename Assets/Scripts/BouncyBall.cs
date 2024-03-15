@@ -33,7 +33,7 @@ public class BouncyBall : MonoBehaviour
             {
                 //Vector3 point = hit.point;
                 int triangleIndex = hit.triangleIndex;
-                deformer.PushGroundUnder(triangleIndex);
+                deformer.PushGroundUnder(hit.point, triangleIndex);
             }
         }
 
