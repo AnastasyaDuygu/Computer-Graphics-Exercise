@@ -4,6 +4,7 @@ Shader "Unlit/MyFirstShader"
 {
 	Properties {
 		_Tint ("Tint", Color) = (1, 1, 1, 1)
+		_MainTex ("Texture", 2D) = "white" {}
 	}
     SubShader {
 
@@ -16,6 +17,8 @@ Shader "Unlit/MyFirstShader"
 			#include "UnityCG.cginc"
 			//return UnityObjectToClipPos(position);
 			float4 _Tint;
+			sampler2D _MainTex;
+			float4 _MainTex_ST;
 
 			struct Interpolators {
 				float4 position : SV_POSITION;
@@ -30,12 +33,12 @@ Shader "Unlit/MyFirstShader"
 			Interpolators MyVertexProgram (VertexData v) {
 				Interpolators i;
 				i.position = UnityObjectToClipPos(v.position);
-				i.uv = v.uv;
+				i.uv = TRANSFORM_TEX(v.uv, _MainTex);
 				return i;
 			}
 
 			float4 MyFragmentProgram (Interpolators i) : SV_TARGET {
-				return float4(i.uv, 1, 1);
+				return tex2D(_MainTex, i.uv) * _Tint;
 			}
 			ENDCG
 		}
