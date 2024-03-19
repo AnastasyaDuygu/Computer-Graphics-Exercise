@@ -49,8 +49,12 @@ Shader "Unlit/Ripple"
                 float2 uv : TEXCOORD1;
             };
 
-            float CreateRipple(float coordinates){ //creates waves
-                float t = cos((coordinates - _Time.y * _WaveSpeed/100) * TAU * _WaveRepeat) * 0.5 + 0.5; // if - _Time then moves in the opposite direction  //* 0.5 + 0.5
+            float CreateRipple(float2 uv){ //creates ripple
+
+                float2 uvsCentered = uv * 2 - 1;
+                float radialDistance = length ( uvsCentered );
+                float t = cos((radialDistance - _Time.y * _WaveSpeed/100) * TAU * _WaveRepeat) * 0.5 + 0.5; // if - _Time then moves in the opposite direction  //* 0.5 + 0.5
+                t *= 1 - radialDistance; // gradient
                 return t;
             }
 
@@ -58,8 +62,8 @@ Shader "Unlit/Ripple"
             {
                 Interpolators o;
 
-                //float waves = CreateRipple(v.uv0.x);
-                //v.vertex.y = waves * _WaveAmp;
+                float ripple = CreateRipple(v.uv0);
+                v.vertex.y = ripple * _WaveAmp;
 
                 o.vertex = UnityObjectToClipPos(v.vertex); //local space to clip space
                 o.normal = normalize(mul ((float3x3)UNITY_MATRIX_M, v.normals));// when you rotate the sphere normals don't change // //UnityObjectToWorldNormal(v.normals);
@@ -69,10 +73,7 @@ Shader "Unlit/Ripple"
 
             float4 frag (Interpolators i) : SV_Target
             {
-                float2 uvsCentered = i.uv * 2 - 1;
-                float radialDistance = length ( uvsCentered );
-
-                float ripple = CreateRipple(radialDistance);
+                float ripple = CreateRipple(i.uv);
                 return ripple;
             }
             ENDCG
