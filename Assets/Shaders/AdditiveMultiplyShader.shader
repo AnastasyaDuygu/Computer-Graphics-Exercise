@@ -48,14 +48,11 @@ Shader "Unlit/AdditiveMultiply"
                 float2 uv : TEXCOORD1;
             };
 
-            sampler2D _MainTex;
-            float4 _MainTex_ST;
-
             Interpolators vert (MeshData v) // just pass data from vertex shader to fragment shader 
             {
                 Interpolators o;
                 o.vertex = UnityObjectToClipPos(v.vertex); //local space to clip space
-                o.normal = mul ((float3x3)UNITY_MATRIX_M, v.normals); // = UnityObjectToWorldNormal(v.normals) // when you rotate the sphere normals don't change
+                o.normal = normalize(mul ((float3x3)UNITY_MATRIX_M, v.normals));// when you rotate the sphere normals don't change // //UnityObjectToWorldNormal(v.normals);
                 //o.uv = (v.uv0 + _Offset) * _Scale;
                 o.uv = v.uv0;
                 return o;

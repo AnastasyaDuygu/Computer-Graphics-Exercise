@@ -51,9 +51,6 @@ Shader "Unlit/BasicMango"
                 float2 uv : TEXCOORD1;
             };
 
-            sampler2D _MainTex;
-            float4 _MainTex_ST;
-
             Interpolators vert (MeshData v) // just pass data from vertex shader to fragment shader 
             {
                 Interpolators o;
