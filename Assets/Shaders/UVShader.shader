@@ -69,9 +69,16 @@ Shader "Unlit/BasicMango"
                 return (v-a)/(b-a);
             }
 
-            float CreateTriangleWaves(float coordinates, float repeat){ //Create triangle waves
+            float CreateWaves(float coordinates, float repeat, float offset){ //Create static triangle waves
                 //float t = abs(frac(clamped * repeat) * 2 - 1);
-                float t = cos(coordinates * TAU * repeat) * 0.5 + 0.5;
+                float t = cos((coordinates + offset) * TAU * repeat) * 0.5 + 0.5;
+                return t;
+            }
+
+            float CreateMovingWaves(float coordinates, float repeat, float offset){ //Create dynamic triangle waves
+                float speed = 10;
+                float t = cos((coordinates + offset + _Time.y * speed/100) * TAU * repeat) * 0.5 + 0.5; // if - _Time then moves in the opposite direction
+                t *= coordinates; //adds gradient to waves // 1 - coordinates => reverses gradient pos
                 return t;
             }
 
@@ -89,11 +96,23 @@ Shader "Unlit/BasicMango"
                 //    return outColor;
 
                 // 6: float t = saturate( InverseLerp(_ColorStart, _ColorEnd, i.uv.x));
-                //    float triangleWaves = CreateTriangleWaves(t, 5);
+                //    -------------------------------------------------------
+                //    DIAGONAL LINES:
+                //    float offset = i.uv.y;
+                //    WIGGLY LINES:
+                //    float wiggleIntensity = 1;
+                //    float offset = cos (i.uv.y * TAU * 8) * wiggleIntensity/100; //creates wiggly lines
+                //    -------------------------------------------------------
+                //    float triangleWaves = CreateWaves(t, 5, offset);
                 //    return lerp(_ColorA, _ColorB, triangleWaves);
 
+                // 7: float offset = cos (i.uv.y * TAU * 8) * wiggleIntensity/100; //creates wiggly lines
+                //    float triangleWaves = CreateMovingWaves(t, 5, offset);
+
                 float t = saturate( InverseLerp(_ColorStart, _ColorEnd, i.uv.x));
-                float triangleWaves = CreateTriangleWaves(t, 5);
+                float wiggleIntensity = 1;
+                float offset = cos (i.uv.y * TAU * 8) * wiggleIntensity/100; //creates wiggly lines
+                float triangleWaves = CreateMovingWaves(t, 5, offset);
                 return lerp(_ColorA, _ColorB, triangleWaves);
                 
                 
