@@ -32,6 +32,7 @@ Shader "Unlit/BasicMango"
             {
                 float4 vertex : SV_POSITION; //clip space position
                 float3 normal : TEXCOORD0;
+                float2 uv : TEXCOORD1;
             };
 
             sampler2D _MainTex;
@@ -41,13 +42,13 @@ Shader "Unlit/BasicMango"
             {
                 Interpolators o;
                 o.vertex = UnityObjectToClipPos(v.vertex); //local space to clip space
-                o.normal = mul ((float3x3)UNITY_MATRIX_M, v.normals); // = UnityObjectToWorldNormal(v.normals) // when you rotate the sphere normals don't change 
+                o.normal = mul ((float3x3)UNITY_MATRIX_M, v.normals); // = UnityObjectToWorldNormal(v.normals) // when you rotate the sphere normals don't change
                 return o;
             }
 
             float4 frag (Interpolators i) : SV_Target
             {
-                return float4(i.normal, 1);
+                return float4(i.normal, 1); // OUTPUT
             }
             ENDCG
         }
