@@ -2,33 +2,35 @@ Shader "Unlit/HealthBar"
 {
     Properties
     {
-        _Tint("Color", Color) = (1,1,1,1)
+        _MainTex("Texture", 2D) = "white" {}
+        _Health("Health Bar", Range(0,1)) = 1
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
+        Tags { "RenderType"="Transparent" "Queue" = "Transparent"}
 
         Pass
         {
+            ZWrite Off
+            //src * srcAlpha + dst * (1-srcAlpha) //src = color output of shader, dst = existing color in the frame buffer
+            Blend SrcAlpha OneMinusSrcAlpha // Alpha blending
+
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
 
             #include "UnityCG.cginc"
 
-            float4 _Tint;
-
             sampler2D _MainTex;
-            float4 _MainTex_ST;
+            float _Health;
+
+            float4 _Tint;
 
             struct MeshData
             {
                 float4 vertex : POSITION; // vertex position
                 float3 normals : NORMAL;
                 float4 uv0 : TEXCOORD0; // uv0 diffuse/normal map textures
-                //float4 uv1 : TEXCOORD1; // uv1 coordinates lightmap coordinates
-                //float4 tangent : TANGENT;
-                //float4 color : COLOR;
             };
 
             struct Interpolators
@@ -45,10 +47,33 @@ Shader "Unlit/HealthBar"
                 o.uv = v.uv0;
                 return o;
             }
+            float InverseLerp(float a, float b, float v) {
+                return (v - a) / (b - a);
+            }
 
-            float4 frag (Interpolators i) : SV_Target
+            float4 frag(Interpolators i) : SV_Target
             {
-                return float4(i.uv, 0, 0); // OUTPUT
+                //without texture:
+                //-------------------------------------------------
+                /*
+                    float healthbarMask = _Health > i.uv.x; //if uv.x is greater than health make it black
+                    //clip(healthbarMask - 0.5); //removes values outside of heathbar mask
+
+                    float tHealthColor = saturate(InverseLerp(0.2, 0.8, _Health)); // makes it so health is clamped btw 0.2-0.8
+                    float3 healthbarColor = lerp(float3(1, 0, 0), float3(0, 1, 0), tHealthColor); //red if health is low, green if high
+
+                    //return float4 (healthbarColor, healthbarMask); //makes background transparent, partial transparency => float4(healthbarColor, healthbarMask * 0.5) //ALPHA BLENDING
+
+                    //float3 outColor = lerp(float3(0, 0, 0), healthbarColor, healthbarMask); //healthbarcolor where there is healthbarmask, black where there is not
+                    return float4(healthbarColor * healthbarMask, 1); //healthbarcolor where there is healthbarmask, black where there is not
+                */
+                //-------------------------------------------------
+                //with texture:
+                float healthbarMask = _Health > i.uv.x; //if uv.x is greater than health make it black
+                //float3 healthbarColor = tex2D(_MainTex, i.uv); //adds the whole texture as healthbar
+                //texture sampling: //clamp the texture to avoid blended edges
+                float3 healthbarColor = tex2D(_MainTex, float2 (_Health, i.uv.y));
+                return float4(healthbarColor * healthbarMask, 1);
             }
             ENDCG
         }
