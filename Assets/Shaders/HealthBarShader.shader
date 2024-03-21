@@ -4,6 +4,8 @@ Shader "Unlit/HealthBar"
     {
         _MainTex("Texture", 2D) = "white" {}
         _Health("Health Bar", Range(0,1)) = 1
+        _Frequency("Flash Frequency", Float) = 4
+        _Amplitude("flash Amplitude", Range(0,1)) = 0.1
     }
     SubShader
     {
@@ -24,7 +26,8 @@ Shader "Unlit/HealthBar"
             sampler2D _MainTex;
             float _Health;
 
-            float4 _Tint;
+            float _Frequency;
+            float _Amplitude;
 
             struct MeshData
             {
@@ -73,7 +76,16 @@ Shader "Unlit/HealthBar"
                 //float3 healthbarColor = tex2D(_MainTex, i.uv); //adds the whole texture as healthbar
                 //texture sampling: //clamp the texture to avoid blended edges
                 float3 healthbarColor = tex2D(_MainTex, float2 (_Health, i.uv.y));
+                //pulsating effect:
+                if (_Health < 0.2) {
+                    float flash = cos(_Time.y * _Frequency) * _Amplitude + 1;
+                    healthbarColor *= flash;  // * -> retain hue when flashing, + -> still flashes but hue is changed
+                }
+
                 return float4(healthbarColor * healthbarMask, 1);
+                
+                
+
             }
             ENDCG
         }
