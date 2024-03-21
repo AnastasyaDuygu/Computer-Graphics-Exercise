@@ -43,7 +43,7 @@ Shader "Unlit/BasicMango"
             {
                 Interpolators o;
                 o.vertex = UnityObjectToClipPos(v.vertex); //local space to clip space
-                o.normal = mul ((float3x3)UNITY_MATRIX_M, v.normals); // = UnityObjectToWorldNormal(v.normals) // when you rotate the sphere normals don't change
+                o.normal = normalize(mul ((float3x3)UNITY_MATRIX_M, v.normals)); // = UnityObjectToWorldNormal(v.normals) // when you rotate the sphere normals don't change
                 return o;
             }
 
