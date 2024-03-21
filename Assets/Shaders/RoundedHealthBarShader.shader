@@ -6,6 +6,8 @@ Shader "Unlit/RoundedHealthBar"
         _Health("Health Bar", Range(0,1)) = 1
         _Frequency("Flash Frequency", Float) = 4
         _Amplitude("flash Amplitude", Range(0,1)) = 0.1
+
+        _BorderSize("Border Size", Range(0,1)) = 0.3
     }
     SubShader
     {
@@ -28,6 +30,8 @@ Shader "Unlit/RoundedHealthBar"
 
             float _Frequency;
             float _Amplitude;
+
+            float _BorderSize;
 
             struct MeshData
             {
@@ -64,6 +68,12 @@ Shader "Unlit/RoundedHealthBar"
                 float sdf = distance(coords, pointOnLineSeg) * 2 - 1;
                 clip(-sdf); //remove the outer edges
 
+                //border
+                float borderSdf = sdf + _BorderSize;
+                //crisp edges
+                float pd = fwidth(borderSdf); // screen space partial derivative
+                float borderMask = 1 - saturate(borderSdf / pd);
+
                 float healthbarMask = _Health > i.uv.x; //if uv.x is greater than health make it black
                 float3 healthbarColor = tex2D(_MainTex, float2 (_Health, i.uv.y));
                 //pulsating effect:
@@ -72,7 +82,7 @@ Shader "Unlit/RoundedHealthBar"
                     healthbarColor *= flash;  // * -> retain hue when flashing, + -> still flashes but hue is changed
                 }
 
-                return float4(healthbarColor * healthbarMask, 1);
+                return float4(healthbarColor * healthbarMask * borderMask, 1);
 
             }
             ENDCG
