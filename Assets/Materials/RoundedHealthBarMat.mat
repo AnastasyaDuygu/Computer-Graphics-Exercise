@@ -62,6 +62,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _Amplitude: 0.1
+    - _BorderSize: 0.3
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
@@ -70,7 +71,7 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _Health: 0.736
+    - _Health: 1
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
