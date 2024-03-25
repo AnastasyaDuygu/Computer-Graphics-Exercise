@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: BasicAmbientLightMat
-  m_Shader: {fileID: 4800000, guid: 91e5e0a55de6c404a85922c4f01b90b7, type: 3}
+  m_Shader: {fileID: 4800000, guid: ea688425d6e7afd49a915c048406b868, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -59,18 +59,32 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _RockAlbedo:
+        m_Texture: {fileID: 2800000, guid: 3abdaa566263d2348937152e3f351d76, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _RockHeight:
+        m_Texture: {fileID: 2800000, guid: d67b582fb861fba47a6e9dbb8d06981f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _RockNormals:
+        m_Texture: {fileID: 2800000, guid: 25d4414c805bf4546836363bc603d984, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
+    - _DisplacementIntensity: 0.0443
     - _DstBlend: 0
-    - _Gloss: 1
+    - _Gloss: 49.12
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _Metallic: 0
     - _Mode: 0
+    - _NormalIntensity: 1
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
@@ -79,7 +93,8 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
+    - _AmbientLight: {r: 0.58219117, g: 0.8396226, b: 0.8267638, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _Tint: {r: 1, g: 1, b: 1, a: 1}
+    - _Tint: {r: 1, g: 0.6179246, b: 0.98328173, a: 1}
   m_BuildTextureStacks: []
