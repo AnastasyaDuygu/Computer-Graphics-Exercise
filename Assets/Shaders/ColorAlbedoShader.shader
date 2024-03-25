@@ -3,6 +3,7 @@ Shader "Unlit/ColorAlbedoShader"
     Properties
     {
         _RockAlbedo ("Albedo", 2D) = "white" {}
+        [NoScaleOffset] _RockNormals ("Normals", 2D) = "bump" {}
         _Tint("Color", Color) = (1,1,1,1)
         _Gloss("Gloss", Float ) = 1
     }
