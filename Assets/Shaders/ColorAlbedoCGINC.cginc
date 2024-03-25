@@ -27,6 +27,7 @@
             sampler2D _RockAlbedo;
             float4 _RockAlbedo_ST;
             sampler2D _RockNormals;
+            float _NormalIntensity;
             float _Gloss;
             float3 _Tint;
 
@@ -54,6 +55,7 @@
                     float3 surfaceColor = rock * _Tint.rgb;
 
                     float3 tangentSpaceNormals = UnpackNormal(tex2D(_RockNormals, i.uv));
+                    tangentSpaceNormals = normalize(lerp(float3(0,0,1), tangentSpaceNormals, _NormalIntensity));
                     //return float4(unpackedNormals,0);
 
                     float3x3 tangetToWorldMatrix = {
