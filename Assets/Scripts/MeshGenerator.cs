@@ -9,7 +9,7 @@ public class MeshGenerator : MonoBehaviour
 
     MeshDeformer _meshDeformer;
 
-    const int squaresPerRow = 12;
+    const int squaresPerRow = 24;
     const int numOfVertices = squaresPerRow * squaresPerRow * 6;
     int numOfSquares = (int)Math.Sqrt(numOfVertices / 6);
 

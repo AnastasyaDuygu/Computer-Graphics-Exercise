@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Bouncy Ball Mini Game.unity
+    guid: 646bc5c592c516347b2b9eab01e6b760
   m_configObjects: {}

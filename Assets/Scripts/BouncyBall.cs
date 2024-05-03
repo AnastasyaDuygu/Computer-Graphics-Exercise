@@ -4,9 +4,14 @@ public class BouncyBall : MonoBehaviour
 {
     [SerializeField] Vector3 startForce;
 
+    private Rigidbody rb;
     private void Start()
     {
-        Rigidbody rb = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
+    }
+    public void StartBallForce()
+    {
+        rb.useGravity = true;
         rb.AddForce(startForce, ForceMode.Impulse);
     }
 

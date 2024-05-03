@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class MeshDeformerInput : MonoBehaviour
 {
@@ -11,7 +12,10 @@ public class MeshDeformerInput : MonoBehaviour
     {
         if (Input.GetMouseButton(0))
         {
-            HandleInput();
+            if (!EventSystem.current.IsPointerOverGameObject())
+            {
+                HandleInput();
+            }
         }
     }
     void HandleInput()
